@@ -1,0 +1,179 @@
+# CRUD Operations for FIWARE NGSI-v2
+
+#General settings
+@orion=localhost:1026
+
+#Test Orion Context Broker is working
+GET http://{{orion}}/version
+
+# ENTITY MANAGEMENT
+### Add entity Building:001
+POST http://{{orion}}/v2/entities
+Content-Type: application/json
+
+{
+    "id": "urn:ngsi-ld:Building:001",
+    "type": "Building",
+    "address":{
+        "type": "PostalAddress",
+        "value": {
+            "streetAddress": "C/ Octavio Cuartero, 4",
+            "addressLocality": "Albacete",
+            "postalCode": "02001",
+            "addressCountry": "Spain"
+        }
+    },
+    "location": {
+        "type": "geo:json",
+        "value": {
+            "type": "Point",
+            "coordinates": [ -1.8570339054401495, 38.990913668029066]
+        }   
+    }
+}
+
+
+### List all entities normalized
+GET http://{{orion}}/v2/entities
+Accept: application/json
+
+### List all entities in keyValues mode
+GET http://{{orion}}/v2/entities?options=keyValues
+Accept: application/json
+
+### List all entities in valueOnly mode
+GET http://{{orion}}/v2/entities?options=values
+Accept: application/json
+
+### List all entities in keyValues mode with attribute location
+GET http://{{orion}}/v2/entities?options=keyValues&attrs=location
+Accept: application/json
+
+### Create entity by ID
+POST http://{{orion}}/v2/entities
+Content-Type: application/json
+
+{
+  "id": "urn:ngsi-ld:Building:002",
+  "type": "Building",
+  "address":{
+      "type": "PostalAddress",
+      "value": {
+          "streetAddress": "C/ Mayor, 10",
+          "addressLocality": "Madrid",
+          "postalCode": "28013",
+          "addressCountry": "Spain"
+      }
+  },
+  "location": {
+      "type": "geo:json",
+      "value": {
+          "type": "Point",
+          "coordinates": [
+            -3.705960302523467, 
+            40.41669683428096
+            ]
+      }   
+  }
+}
+
+### Delete entity
+DELETE http://{{orion}}/v2/entities/urn:ngsi-ld:Building:001
+
+
+# ATTRIBUTE MANAGEMENT
+## READ
+### Get all attributes of an entity
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs?options=keyValues
+Accept: application/json
+
+### Get specific attribute of an entity
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/address
+Accept: application/json    
+
+### Get value of specific attribute of an entity
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/location/value
+Accept: application/json
+
+## UPDATE Attributes
+### Add or update attributes of an entity
+POST http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
+Content-Type: application/json
+
+{
+  "numberOfFloors": {
+      "type": "Integer",
+      "value": 5
+  }
+}
+
+### UPDATE attributes of an entity using PATCH
+PATCH http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
+Content-Type: application/json
+
+{
+  "numberOfFloors": {
+      "value": 6
+  },
+  "location": {
+      "value": {
+          "type": "Point",
+          "coordinates": [
+            -3.706, 
+            40.417
+            ]
+      }   
+  }
+}
+
+
+### REPLACE all attributes of an entity using PUT
+PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
+Content-Type: application/json 
+
+{  "name": {
+      "type": "Text",
+      "value": "Edificio FRANMAN"
+  },
+  "numberFloors": {
+      "type": "Integer",
+      "value": 7
+  },
+  "area": {
+      "type": "Number",
+      "value": 635.5
+  }
+}
+
+### REPLACE an specific attribute of an entity using PUT
+PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/area
+Content-Type: application/json 
+
+{  
+  "type": "Number",
+  "value": 700.0,
+  "metadata": {
+      "unitCode": {
+          "type": "Text",
+          "value": "MTK"
+      }
+    }
+}
+
+### UPDATE value of an specific attribute of an entity using PUT
+PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/name/value
+Content-Type: text/plain
+
+"Edificio FRANMAN 2.0"
+
+### DELETE specific attribute of an entity
+DELETE http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/name
+
+
+### List entities of type Temperature
+GET http://{{orion}}/v2/entities?options=keyValues&q=refFlat==urn:ngsi-ld:Flat:001
+Accept: application/json    
+
+
+## BATCH Update entities
+
