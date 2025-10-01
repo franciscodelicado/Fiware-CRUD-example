@@ -1,12 +1,7 @@
 
 
 # Ejemplos de operaciones CRUD en NGSI-v2
-A continuación vamos a ver ejemplos de las operaciones CRUD básicas para gestionar entidades en NGSI-v2. Para ello, representaremos la distribución de sensores dentro de las habitaciones de una casa inteligente. Cada sensor será una entidad que tendrá un atributo como la temperatura o la humedad. Además, dispondrá de un atributo que hará referencia a la habitación donde se encuentra el sensor. La habitación a su vez, será una entidad que tendrá un nombre, una superficie y hará referencia al piso en el que se encuentra. El piso por su parte, hará referencia al edificio donde está ubicado, indicando la planta y puerta del mismo. Y el edificio tendrá una dirección y una localización geográfica. Un esquema de la relación entre entidades se puede ver en la [Figura 1](#fig:entities-relation).
-<a name="fig:entities-relation" ><figure>
-  <img src="./fig/entities-relation.png" alt="Relación entre entidades" style="width:400px; margin-left: auto; margin-right: auto; display: block;"/>
-  <figcaption align="center" size="tiny">Figura 1:Relación entre entidades.</figcaption>
-</figure></a>
-
+A continuación vamos a ver ejemplos de las operaciones CRUD básicas para gestionar entidades en NGSI-v2. 
 ## Arquitectura de trabajo
 Para probar los ejemplos de operaciones CRUD en NGSI-v2, utilizaremos el Context Broker Orion de Fiware desplegado mediante Docker. La siguiente imagen muestra la arquitectura de trabajo que utilizaremos para los ejemplos (ver [Figura 2](#fig:architecture)).
 <a name="fig:architecture" ><figure>  
