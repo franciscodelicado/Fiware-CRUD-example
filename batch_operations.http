@@ -1,0 +1,140 @@
+@orion=localhost:1026
+
+### Check that Orion is running
+GET http://{{orion}}/version
+Accept: application/json
+
+### List all entities
+GET http://{{orion}}/v2/entities?options=keyValues
+Accept: application/json
+
+### Add multiple products
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json
+
+{
+  "actionType": "append",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Product:0001",
+      "type": "Product",
+      "name": { "value": "Manzana", "type": "Text" },
+      "category": { "value": "Frutas", "type": "Text" },
+      "price": { "value": 0.5, "type": "Number", "metadata": { "unitCode": { "value": "EUR", "type": "Text" } } },
+      "stock": { "value": 100, "type": "Number" }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0002",
+      "type": "Product",
+      "name": { "value": "Leche", "type": "Text" },
+      "category": { "value": "Lácteos", "type": "Text" },
+      "price": { "value": 1.0, "type": "Number", "metadata": { "unitCode": { "value": "EUR", "type": "Text" } } },
+      "stock": { "value": 50, "type": "Number" }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0003",
+      "type": "Product",
+      "name": { "value": "Pan", "type": "Text" },
+      "category": { "value": "Panadería", "type": "Text" },
+      "price": { "value": 1.5, "type": "Number", "metadata": { "unitCode": { "value": "EUR", "type": "Text" } } },
+      "stock": { "value": 30, "type": "Number" }
+    }
+  ]
+}
+
+
+### Add attributes to multiple entities
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json  
+
+{
+  "actionType": "append_strict",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Product:0001",
+      "type": "Product",
+      "supplier": { "value": "Proveedor A", "type": "Text" }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0002",
+      "type": "Product",
+      "supplier": { "value": "Proveedor B", "type": "Text" }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0003",
+      "type": "Product",
+      "supplier": { "value": "Proveedor C", "type": "Text" }
+    }
+  ]
+}
+
+### Add different attributes to multiple entities
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json  
+
+{
+  "actionType": "append_strict",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Product:0002",
+      "type": "Product",
+      "expirationDate": { "value": "2027-12-31", "type": "DateTime" }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0003",
+      "type": "Product",
+      "weight": { "value": 0.250, "type": "Number", "metadata": { "unitCode": { "value": "KGM", "type": "Text" } } }
+    }
+  ]
+}
+
+### Update multiple entities
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json  
+
+{
+  "actionType": "update",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Product:0001",
+      "type": "Product",
+      "price": { 
+        "value": 0.6
+        }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0002",
+      "type": "Product",
+      "price": { 
+        "value": 1.1 
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0003",
+      "type": "Product",
+      "stock": { 
+        "value": 25 
+      }
+    }
+  ]
+}
+
+### Delete multiple entities
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json
+
+{
+  "actionType": "delete",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Product:0001",
+      "type": "Product",
+      "supplier": {}
+    },
+    {
+      "id": "urn:ngsi-ld:Product:0003",
+      "type": "Product",
+      "stock": {}
+    }
+  ]
+}
