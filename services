@@ -26,12 +26,12 @@ if (( $# < 1 )); then	echo "Illegal number of parameters"
 	exit 1
 fi
 
-# loadData () {
-# 	docker run --rm -v $(pwd)/import-data:/import-data \
-# 		--network fiware_default \
-# 		--entrypoint /bin/ash curlimages/curl /import-data
-# 	echo ""
-# }
+loadData () {
+	docker run --rm -v $(pwd)/import-data:/import-data \
+		--network fiware_default \
+		--entrypoint /bin/ash curlimages/curl /import-data
+	echo ""
+}
 
 stoppingContainers () {
 	CONTAINERS=$(docker ps --filter "label=org.fiware=tutorial" -aq)
@@ -102,7 +102,7 @@ case "${command}" in
 		waitForMongo
 		addDatabaseIndex
 		waitForOrion
-		# loadData
+		loadData
 		displayServices
 		;;
 	"stop")

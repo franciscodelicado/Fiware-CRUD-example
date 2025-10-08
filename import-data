@@ -16,8 +16,8 @@ curl -s -o /dev/null -X POST \
     "actionType": "append",
     "entities": [
         {
-            "id": "urn:ngsi-ld:Building:001",
-            "type": "Building",
+            "id": "urn:ngsi-ld:Store:001",
+            "type": "Store",
             "address":{
                 "type": "PostalAddress",
                 "value": {
@@ -34,11 +34,51 @@ curl -s -o /dev/null -X POST \
                     "coordinates": [ -1.8570339054401495, 38.990913668029066]
                 }   
             }
+        },
+        {
+            "id": "urn:ngsi-ld:Store:002",
+            "type": "Store",
+            "address":{
+                "type": "PostalAddress",
+                "value": {
+                    "streetAddress": "C/ Mayor, 10",
+                    "addressLocality": "Albacete",
+                    "postalCode": "02001",
+                    "addressCountry": "Spain"
+                }
+            },
+            "location": {
+                "type": "geo:json",
+                "value": {
+                    "type": "Point",
+                    "coordinates": [ -1.8568234873836609, 38.994465042377854]
+                }   
+            }
+        },
+        {
+            "id": "urn:ngsi-ld:Store:003",
+            "type": "Store",
+            "address":{
+                "type": "PostalAddress",
+                "value": {
+                    "streetAddress": "C/ San Juan, 6",
+                    "addressLocality": "Albacete",
+                    "postalCode": "02001",
+                    "addressCountry": "Spain"
+                }
+            },
+            "location": {
+                "type": "geo:json",
+                "value": {
+                    "type": "Point",
+                    "coordinates": [ -1.8519450432016082,38.98310104892331]
+                }   
+            }
         }
     ]
 }'
 
-# Loading flats entities
+# Loading Products entities
 curl -s -o /dev/null -X POST \
   'http://orion:1026/v2/op/update' \
   -H 'Content-Type: application/json' \
@@ -46,529 +86,211 @@ curl -s -o /dev/null -X POST \
     "actionType": "append",
     "entities": [
         {
-            "id": "urn:ngsi-ld:Flat:001",
-            "type": "Flat",
-            "refBuilding": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Building:001"
-            },
-            "floor": {
-                "type": "Number",
-                "value": 1
-            },
-            "door": {
+            "id": "urn:ngsi-ld:Product:001",
+            "type": "Product",
+            "name": {
                 "type": "Text",
-                "value": "A"
-            }  
-        },
-        {
-            "id": "urn:ngsi-ld:Flat:002",
-            "type": "Flat",
-            "refBuilding": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Building:001"
+                "value": "Apple"
             },
-            "floor": {
-                "type": "Number",
-                "value": 1
-            },
-            "door": {
+            "category": {
                 "type": "Text",
-                "value": "B"
+                "value": "Fruit"
+            },
+            "price": {
+                "type": "Number",
+                "value": 1.5,
+                "metadata": { "currency": { "type": "Text", "value": "EUR" }}
             }
         },
         {
-            "id": "urn:ngsi-ld:Flat:003",
-            "type": "Flat",
-            "refBuilding": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Building:001"
-            },
-            "floor": {
-                "type": "Number",
-                "value": 2
-            },
-            "door": {
+            "id": "urn:ngsi-ld:Product:002",
+            "type": "Product",
+            "name": {
                 "type": "Text",
-                "value": "A"
+                "value": "Bread"
+            },
+            "category": {
+                "type": "Text",
+                "value": "Bakery"
+            },
+            "price": {
+                "type": "Number",
+                "value": 1.2,
+                "metadata": { "currency": { "type": "Text", "value": "EUR" } }
             }
         },
         {
-            "id": "urn:ngsi-ld:Flat:004",
-            "type": "Flat",
-            "refBuilding": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Building:001"
-            },
-            "floor": {
-                "type": "Number",
-                "value": 2
-            },
-            "door": {
-                "type": "Text",
-                "value": "B"
-            }
-        }
-    ]
-}
-'
-
-
-# Loading rooms entities
-curl -s -o /dev/null -X POST \
-  'http://orion:1026/v2/op/update' \
-  -H 'Content-Type: application/json' \
-  -g -d '{
-    "actionType": "append",
-    "entities":[
-        {
-            "id": "urn:ngsi-ld:Room:Flat1Room1",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:001"
-            },
+            "id": "urn:ngsi-ld:Product:003",
+            "type": "Product",
             "name": {
                 "type": "Text",
-                "value": "Living Room"  
+                "value": "Milk"
             },
-            "area": {
-                "type": "Number",
-                "value": 20,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat1Room2",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:001"
-            },
-            "name": {
+            "category": {
                 "type": "Text",
-                "value": "Bedroom"  
+                "value": "Dairy"
             },
-            "area": {
+            "price": {
                 "type": "Number",
-                "value": 15,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat1Room3",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:001"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 12,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat1Room4",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:001"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Kitchen"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 14,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat1Room5",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:001"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bathroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 8,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat2Room1",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:002"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Living Room"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 22,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat2Room2",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:002"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 16,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat2Room3",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:002"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 13,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat2Room4",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:002"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Kitchen"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 15,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat2Room5",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:002"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bathroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 9,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat3Room1",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:003"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Living Room"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 18,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat3Room2",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:003"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 14,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat3Room3",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:003"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 11,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat3Room4",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:003"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Kitchen"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 13,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat3Room5",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:003"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bathroom" 
-            },
-            "area": {
-                "type": "Number",
-                "value": 9,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat4Room1",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:004"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Living Room"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 19,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat4Room2",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:004"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 15,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat4Room3",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:004"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bedroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 12,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat4Room4",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:004"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Kitchen"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 14,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }   
-            }   
-        },
-        {
-            "id": "urn:ngsi-ld:Room:Flat4Room5",
-            "type": "Room",
-            "refFlat": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Flat:004"
-            },
-            "name": {
-                "type": "Text",
-                "value": "Bathroom"  
-            },
-            "area": {
-                "type": "Number",
-                "value": 8,
-                "metadata": {
-                    "unitCode": {
-                        "type": "Text",
-                        "value": "MTK"
-                    }
-                }
+                "value": 0.9,
+                "metadata": { "currency": { "type": "Text", "value": "EUR" }}
             }
         }
     ]
 }'
 
-# printf "⏳ Loading sensors entities "
-# # Loading sensors entities
-# curl -s -o /dev/null -X POST \
-#   'http://orion:1026/v2/op/update' \
-#   -H 'Content-Type: application/json' \
-#   -g -d '@./sensors.json'
+# Loading Inventory entities
+curl -s -o /dev/null -X POST \
+  'http://orion:1026/v2/op/update' \
+  -H 'Content-Type: application/json' \
+  -g -d '{
+    "actionType": "append",
+    "entities": [
+        {
+            "id": "urn:ngsi-ld:Inventory:001",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:001"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:001"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 50
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:002",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:001"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:002"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 30
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:003",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:001"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:003"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 20
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:004",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:002"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:001"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 50
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:005",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:002"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:002"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 30
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:006",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:002"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:003"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 20
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:007",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:003"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:001"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 50
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:008",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:003"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:002"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 30
+                }
+        },
+        {
+            "id": "urn:ngsi-ld:Inventory:009",
+            "type": "Inventory",
+            "refStore": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Store:003"
+            },
+            "refProduct": {
+                "type": "Relationship",
+                "value": "urn:ngsi-ld:Product:003"
+            },
+            "stockCount": {
+                "type": "Number",
+                "value": 20
+                }
+        }
+    ]
+}'
 
-echo -e " \033[1;32mdone\033[0m"
+printf " ✅ Done\n"

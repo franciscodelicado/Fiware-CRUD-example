@@ -1,0 +1,177 @@
+@orion=localhost:1026
+
+# Subscriber IP and port. It should be reachable from the Orion Context Broker, so if you are using Docker, use the docker network gateway IP, which is an interface between the your host and the Docker containers.
+# It is the first IP of the subnet used by Docker. The docker subnet IP is set in -subnet option in network: section of docker-compose.yml file
+@subscriber=172.18.1.1:1234 
+
+### Check that Orion is running
+GET http://{{orion}}/version
+Accept: application/json
+
+### List all entities
+GET http://{{orion}}/v2/entities?options=keyValues
+Accept: application/json
+
+### Create a subscription to be notified when the stock of any product is below 20
+POST http://{{orion}}/v2/subscriptions
+Content-Type: application/json  
+
+{
+  "description": "Notify me when stock is below 20",
+  "subject": {
+    "entities": [
+      {
+        "idPattern": "urn:ngsi-ld:Inventory:.*",
+        "type": "Inventory"
+      }
+    ],
+    "condition": {
+      "attrs": [
+        "stockCount"
+      ],
+      "expression": {
+        "q": "stockCount<20"
+      }
+    }
+  },
+  "notification": {
+    "http": {
+      "url": "http://{{subscriber}}//subscription/attr-change"
+    },
+    "attrs": [
+      "stockCount"
+    ],
+    "metadata": ["dateCreated", "dateModified"]
+  },
+  "throttling": 5
+}
+
+
+### List all subscriptions
+# @name getSubscriptions
+GET http://{{orion}}/v2/subscriptions
+Accept: application/json
+
+### Update stockCount attribute of an inventory entity to trigger the subscription
+POST http://{{orion}}/v2/entities/urn:ngsi-ld:Inventory:001/attrs?options=keyValues
+Content-Type: application/json
+
+{
+    "stockCount": 15
+}
+    
+### GET Inventory entity to see the updated attribute
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Inventory:001?options=keyValues
+Accept: application/json
+
+### New subscription: Bread price below 1.0 EUR
+POST http://{{orion}}/v2/subscriptions
+Content-Type: application/json  
+
+{
+  "description": "Notify me when bread price is below 1.0 EUR",
+  "subject": {
+    "entities": [
+      {
+        "idPattern": "urn:ngsi-ld:Product:002",
+        "type": "Product",
+        "category": "Bakery",
+        "name" : "Bread"
+      }
+    ],
+    "condition": {
+      "attrs": [
+        "price"
+      ]
+    }
+  },
+  "notification": {
+    "http": {
+      "url": "http://{{subscriber}}/subscription/attr-change"
+    },
+    "attrs": [
+      "price"
+    ],
+    "metadata": ["dateCreated", "dateModified"]
+  },
+  "throttling": 5
+} 
+
+# UPDATE BREAD PRICE TO TRIGGER THE SUBSCRIPTION
+### First, check the current price of Bread
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:002?options=keyValues
+Accept: application/json
+
+### Update Bread price to trigger the subscription
+PATCH http://{{orion}}/v2/entities/urn:ngsi-ld:Product:002/attrs?options=keyValues
+Content-Type: application/json
+
+{
+    "price": 1
+}
+
+### GET Bread entity to see the updated attribute
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:002?options=keyValues
+Accept: application/json
+
+
+
+
+# UPDATE APPLE PRICE, BUT IT SHOULD NOT TRIGGER THE SUBSCRIPTION
+### First, check the current price of Apple
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:001?options=keyValues
+Accept: application/json
+
+### Update Apple price, but it should NOT trigger the subscription
+POST http://{{orion}}/v2/entities/urn:ngsi-ld:Product:001/attrs?options=keyValues
+Content-Type: application/json
+
+{
+    "price": 1.0
+}
+
+### Get Apple entity to see the updated attribute
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:001?options=keyValues
+Accept: application/json
+
+# UPDATE  SUBSCRIPTION about BREAD PRICE TO ADD A CONDITION
+@BreadSubscriptionId = {{getSubscriptions.response.body.$[1].id}}
+### Sent notification only if price is below 1.0 EUR
+PATCH http://{{orion}}/v2/subscriptions/{{BreadSubscriptionId}}
+Content-Type: application/json
+
+{
+  "description": "Notify me when bread price is below 1.0 EUR",
+  "subject": {
+    "entities": [
+      {
+        "idPattern": "urn:ngsi-ld:Product:002",
+        "type": "Product",
+        "category": "Bakery",
+        "name" : "Bread"
+      }
+    ],
+    "condition": {
+      "attrs": [
+        "price"
+      ],
+      "expression": {
+        "q": "price<1.0"
+      }
+    }
+  }
+}
+
+# DELETE SUBSCRIPTION
+### First, list all subscriptions to get the subscriptionId of first subscription
+### List all subscriptions and save the id of the first one in 1stSubscriptionId variable
+
+GET http://{{orion}}/v2/subscriptions
+Accept: application/json
+
+### DELETE the subscription
+@1stSubscriptionId = {{getSubscriptions.response.body.$[0].id}}
+DELETE http://{{orion}}/v2/subscriptions/{{1stSubscriptionId}}
+Accept: application/json
+
+
