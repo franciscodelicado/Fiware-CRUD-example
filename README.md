@@ -1,4 +1,4 @@
-# Ejemplos de tratamiento por lotes en NGSI-v2
+# Ejemplos de Subscripciones en NGSI-v2
 Para este ejemplo simularemos un escenario de una tienda de alimentación que quiere gestionar la información de sus productos utilizando Fiware y NGSI-v2. La tienda tiene varios productos, cada uno con atributos como nombre, categoría, precio y cantidad en stock. Queremos realizar varias operaciones por lotes para gestionar estos productos de manera eficiente.
 
 ## Requisitos
