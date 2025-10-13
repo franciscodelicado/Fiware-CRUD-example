@@ -1,4 +1,4 @@
-# Ejemplos de tratamiento por lotes en NGSI-v2
+# Ejemplos de operaciones por lotes en NGSI-v2
 Para este ejemplo simularemos un escenario de una tienda de alimentación que quiere gestionar la información de sus productos utilizando Fiware y NGSI-v2. La tienda tiene varios productos, cada uno con atributos como nombre, categoría, precio y cantidad en stock. Queremos realizar varias operaciones por lotes para gestionar estos productos de manera eficiente.
 
 ## Requisitos
@@ -21,6 +21,7 @@ git checkout batch
 
 ## Crear entidades por lotes
 Agregaremos varios productos a la tienda en una sola operación. Crearemos tres productos con sus respectivos atributos, según las especificaciones de la siguiente tabla:
+
 | `id`          | `type`    | Atributos                                      |
 |---------------|-----------|------------------------------------------------|
 | `0001`       | `Product` | `name`: "Manzana", `category`: "Frutas", `price`: 0.5, `stock`: 100 |
@@ -158,5 +159,21 @@ Supongamos que queremos eliminar el atributo `supplier` de todas las frutas, y e
       "stock": {}
     }
   ]
+}
+```
+
+# CONSULTAS por lotes
+Supongamos que queremos recuperar información de todos los productos cuyo precio sea inferior a 1 euro, pero solo los atributos `name`, `price` y `stock`. Realizaremos una petición **POST** al endpoint **`/v2/op/query`** con el siguiente "_payload_":
+
+```json
+{
+  "entities": [
+    {
+      "idPattern" : ".*",
+      "type": "Product"
+    }
+  ],
+  "attrs": ["name", "price", "stock"],
+  "expression": { "q" : "price<1" }
 }
 ```
