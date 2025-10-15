@@ -14,7 +14,9 @@ Para probar los ejemplos de operaciones CRUD en NGSI-v2, utilizaremos el Context
 ### Requisitos previos
 Para seguir los ejemplos, es necesario tener instalado
 
-- [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/install/).
+- Un sistema operativo basado en Linux (Ubuntu, Debian, Fedora, CentOS, etc.) o Windows 10/11 con WSL2 y una distribución de Linux (Ubuntu recomendada).
+
+- [Docker](https://docs.docker.com/get-docker/) y [Docker Compose](https://docs.docker.com/compose/install/). En el caso de utilizar Windows, debemos tener instalado [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) y tener habilitada la opción "Use WLS2 instead of Hyper-V" en la Configuración. 
 - Una herramienta para realizar peticiones HTTP, como [Postman](https://www.postman.com/) o [cURL](https://curl.se/). O el uso del [complemento REST Client](https://marketplace.visualstudio.com/items?itemName=humao.rest-client) de [Visual Studio Code](https://code.visualstudio.com/).
 
 #### Obtención del software sistema
