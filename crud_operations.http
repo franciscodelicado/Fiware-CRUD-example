@@ -109,7 +109,6 @@ GET http://{{orion}}/v2/entities?type=Building&geoproperty=location&georel=near;
 Accept: application/json
 
 
-
 ## UPDATE Attributes
 ### Add or update attributes of an entity
 POST http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
