@@ -92,8 +92,23 @@ GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/address
 Accept: application/json    
 
 ### Get value of specific attribute of an entity
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/location/value
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:001/attrs/address/value
 Accept: application/json
+
+# Queries with filter
+### List all entities of type Building
+GET http://{{orion}}/v2/entities?type=Building
+
+### List all entities of type Building with postalCode '02001'
+GET http://{{orion}}/v2/entities?type=Building&q=address.postalCode=='02001'&options=keyValues
+Accept: application/json
+
+
+### List all entities of type Building within 2000 meters of given coordinates
+GET http://{{orion}}/v2/entities?type=Building&geoproperty=location&georel=near;maxDistance:2000&geometry=point&coords=40.416775,-3.703790&options=keyValues
+Accept: application/json
+
+
 
 ## UPDATE Attributes
 ### Add or update attributes of an entity
@@ -175,5 +190,4 @@ GET http://{{orion}}/v2/entities?options=keyValues&q=refFlat==urn:ngsi-ld:Flat:0
 Accept: application/json    
 
 
-## BATCH Update entities
 

@@ -430,23 +430,60 @@ que devolvería una respuesta similar a la siguiente:
 ```
 
 ### LEE del **valor** de un `<attr-name>` específico de una entidad
-Para leer el valor de un atributo específico de una entidad, se utiliza el método HTTP **GET** sobre el endpoint **`v2/entities/<entity-id>/attrs/<attr-name>/value`**. Por ejemplo, para leer el valor del atributo `location` de la entidad `Building:002`, se realizaría la siguiente petición:
+Para leer el valor de un atributo específico de una entidad, se utiliza el método HTTP **GET** sobre el endpoint **`v2/entities/<entity-id>/attrs/<attr-name>/value`**. Por ejemplo, para leer el valor del atributo `address` de la entidad `Building:002`, se realizaría la siguiente petición:
 
 ```bash
-curl -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Building:002/attrs/location/value' | jq '.'
+curl -X GET 'http://localhost:1026/v2/entities/urn:ngsi-ld:Building:002/attrs/address/value' | jq '.'
 ```
 
 que devolvería una respuesta similar a la siguiente:
 
 ```json
 {
-    "type": "Point",
-    "coordinates": [
-      -3.705960303,
-      40.416696834
-    ]
+  "streetAddress": "C/ Mayor, 10",
+  "addressLocality": "Madrid",
+  "postalCode": "28013",
+  "addressCountry": "Spain"
 }
 ```
+
+### Lista entidades con filtros
+Una funcionalidad de la RESTful API de NGSI -v2 es la posibilidad de listar entidades aplicando ciertos filtros. Los más comunes son:
+- Filtrado por tipo de entidad: mediante el parámetro `type=<entity-type>`. Devuelve todas las entidades del tipo especificado.
+- Filtrado por valor de atributo: mediante el parámetro `q=<attr-name><operator><value>`. Donde `<operator>` puede ser uno de los siguientes: `==`, `!=`, `<`, `<=`, `>`, `>=`. Devolverá todas las entidades que tengan un atributo `<attr-name>` cuyo valor cumpla la condición especificada.
+- Filtrado por lista de atributos: mediante el parámetro `attrs=<attr1>,<attr2>,...`. Devuelve solo los atributos especificados de las entidades.
+- Filtrado por proximidad geográfica: mediante los parámetros `georel=<relation>;maxDistance:<distance>`, `geometry=<geometry>` y `coords=<latitude>,<longitude>`. Donde `<relation>` puede ser `near`, `within`, `contains`, etc., `<geometry>` puede ser `point`, `polygon`, etc., y `<distance>` es la distancia máxima en metros.
+- Filtrado por paginación: mediante los parámetros `limit=<number>` y `offset=<number>`.
+
+Por ejemplo, para listar los edificios que están a menos de 2 Km de la Puerta del Sol de Madrid (coordenadas: 40.416775, -3.703790), se realizaría la siguiente petición:
+
+```bash
+curl -X GET 'http://localhost:1026/v2/entities?type=Building&q=address.postalCode==28013&options=keyValues' | jq '.'
+```
+que devolvería una respuesta similar a la siguiente:
+
+```json
+[
+  {
+    "id": "urn:ngsi-ld:Building:002",
+    "type": "Building",
+    "address": {
+      "streetAddress": "C/ Mayor, 10",
+      "addressLocality": "Madrid",
+      "postalCode": "28013",
+      "addressCountry": "Spain"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        -3.705960303,
+        40.416696834
+      ]
+    }
+  }
+]
+```
+
 
 ### AÑADE/ACTUALIZA uno o más atributos de una entidad
 Para añadir o actualizar uno o más atributos de una entidad, se utiliza el método HTTP **POST** sobre el endpoint **`v2/entities/<entity-id>/attrs`**. El cuerpo de la solicitud debe contener, en el cuerpo del mensaje, la representación JSON de los atributos a añadir o actualizar. Si el atributo ya existe, se actualizará su valor; si no existe, se añadirá como un nuevo atributo. Por ejemplo, para añadir un nuevo atributo `numberOfFloors` a la entidad `Building:002`, se realizaría la siguiente petición:
