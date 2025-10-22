@@ -4,11 +4,11 @@
 A continuación vamos a ver ejemplos de las operaciones CRUD básicas para gestionar entidades en NGSI-v2. 
 
 ## Arquitectura de trabajo
-Para probar los ejemplos de operaciones CRUD en NGSI-v2, utilizaremos el Context Broker Orion de Fiware desplegado mediante Docker. La siguiente imagen muestra la arquitectura de trabajo que utilizaremos para los ejemplos (ver [Figura 2](#fig:architecture)).
+Para probar los ejemplos de operaciones CRUD en NGSI-v2, utilizaremos el Context Broker Orion de Fiware desplegado mediante Docker. La siguiente imagen muestra la arquitectura de trabajo que utilizaremos para los ejemplos (ver [Figura 1](#fig:architecture)).
 
 <a name="fig:architecture" ><figure>  
   <img src="./fig/Fiware_OnlyOrion.png" alt="Arquitectura de trabajo" style="width:600px; margin-left: auto; margin-right: auto; display: block;"/>
-  <figcaption style="text-align: center; font-size: tiny;">Figura 2: Arquitectura de trabajo.</figcaption>
+  <figcaption style="text-align: center; font-size: tiny;">Figura 1: Arquitectura de trabajo.</figcaption>
 </figure></a> 
 
 ### Requisitos previos
@@ -447,20 +447,20 @@ que devolvería una respuesta similar a la siguiente:
 }
 ```
 
-### Lista entidades con filtros
+## Lista entidades con FILTROS
 Una funcionalidad de la RESTful API de NGSI -v2 es la posibilidad de listar entidades aplicando ciertos filtros. Los más comunes son:
-- Filtrado por tipo de entidad: mediante el parámetro `type=<entity-type>`. Devuelve todas las entidades del tipo especificado.
-- Filtrado por valor de atributo: mediante el parámetro `q=<attr-name><operator><value>`. Donde `<operator>` puede ser uno de los siguientes: `==`, `!=`, `<`, `<=`, `>`, `>=`. Devolverá todas las entidades que tengan un atributo `<attr-name>` cuyo valor cumpla la condición especificada.
-- Filtrado por lista de atributos: mediante el parámetro `attrs=<attr1>,<attr2>,...`. Devuelve solo los atributos especificados de las entidades.
-- Filtrado por proximidad geográfica: mediante los parámetros `georel=<relation>;maxDistance:<distance>`, `geometry=<geometry>` y `coords=<latitude>,<longitude>`. Donde `<relation>` puede ser `near`, `within`, `contains`, etc., `<geometry>` puede ser `point`, `polygon`, etc., y `<distance>` es la distancia máxima en metros.
-- Filtrado por paginación: mediante los parámetros `limit=<number>` y `offset=<number>`.
 
-Por ejemplo, para listar los edificios que están a menos de 2 Km de la Puerta del Sol de Madrid (coordenadas: 40.416775, -3.703790), se realizaría la siguiente petición:
+- Filtrado por **tipo de entidad**: mediante el parámetro `type=<entity-type>`. Devuelve todas las entidades del tipo especificado.
+- Filtrado por **valor de atributo**: mediante el parámetro `q=<attr-name><operator><value>`. Donde `<operator>` puede ser uno de los siguientes: `==`, `!=`, `<`, `<=`, `>`, `>=`. Devolverá todas las entidades que tengan un atributo `<attr-name>` cuyo valor cumpla la condición especificada.
+- Filtrado por **lista de atributos**: mediante el parámetro `attrs=<attr1>,<attr2>,...`. Devuelve solo los atributos especificados de las entidades.
+- Filtrado por **paginación**: mediante los parámetros `limit=<number>` y `offset=<number>`.
+  
+Por ejemplo para listar todas las entidades de tipo `Building` que tenga el código postal `28013`, se realizaría la siguiente petición:
 
 ```bash
-curl -X GET 'http://localhost:1026/v2/entities?type=Building&q=address.postalCode==28013&options=keyValues' | jq '.'
+curl -X GET "http://localhost:1026/v2/entities?type=Building&q=address.postalCode=='28013'&options=keyValues" | jq '.'
 ```
-que devolvería una respuesta similar a la siguiente:
+**OJO**: en el parámetro `q`, el valor de `address.postalCode` debe ir entre comillas simples (`'`) ya que es una _string_. Lo que devolvería una respuesta similar a la siguiente,
 
 ```json
 [
@@ -483,6 +483,48 @@ que devolvería una respuesta similar a la siguiente:
   }
 ]
 ```
+
+### Filtrado GEOESPACIAL de entidades
+Además, NGSI-v2 permite combinar varios filtros para realizar consultas más complejas como son la proximidad geográfica. Este tipo de filtros utiliza los siguientes parámetros `georel=<relation>;maxDistance:<distance>`, `geometry=<geometry>` y `coords=<latitude>,<longitude>`. Donde `<relation>` puede ser `near`, `within`, `contains`, etc., `<geometry>` puede ser `point`, `polygon`, etc., y `<distance>` es la distancia máxima en metros.
+
+
+Por ejemplo, para listar los edificios que están a menos de 2 Km de la Puerta del Sol de Madrid (coordenadas: 40.416775, -3.703790), se realizaría la siguiente petición:
+
+```bash
+curl -X GET 'http://localhost:1026/v2/entities?type=Building&geoproperty=location&georel=near;maxDistance:2000&geometry=point&coords=40.416775,-3.703790&options=keyValues' | jq '.'
+```
+
+Donde se puede ver que:
+
+- Se especifica el tipo de entidad `type=Building`.
+- Se indica que el filtro geoespacial se aplicará sobre la propiedad `geoproperty=location`.
+- Se utiliza la `georel` relación `near` con una distancia máxima de 2000 metros(`georel=near;maxDistance:2000`).
+- Se especifica la geometría como `geometry=point` y las coordenadas de referencia que corresponden a la Puerta del Sol de Madrid (`coords=40.416775,-3.703790`).
+
+La respuesta que devolvería sería similar a la siguiente:
+
+```json
+[
+  {
+    "id": "urn:ngsi-ld:Building:002",
+    "type": "Building",
+    "address": {
+      "streetAddress": "C/ Mayor, 10",
+      "addressLocality": "Madrid",
+      "postalCode": "28013",
+      "addressCountry": "Spain"
+    },
+    "location": {
+      "type": "Point",
+      "coordinates": [
+        -3.705960303,
+        40.416696834
+      ]
+    }
+  }
+]
+```
+
 
 
 ### AÑADE/ACTUALIZA uno o más atributos de una entidad
