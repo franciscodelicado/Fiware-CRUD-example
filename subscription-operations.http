@@ -1,8 +1,19 @@
+#General settings
 @orion=localhost:1026
 
 # Subscriber IP and port. It should be reachable from the Orion Context Broker, so if you are using Docker, use the docker network gateway IP, which is an interface between the your host and the Docker containers.
-# It is the first IP of the subnet used by Docker. The docker subnet IP is set in -subnet option in network: section of docker-compose.yml file
-@subscriber=172.18.1.1:1234 
+# For Windows and Mac use host.docker.internal, for Linux use the gateway IP (usually first IP of docker network, see docker-compose.yml for details)
+
+@subscriber4Windows=host.docker.internal:1234
+@subscriber4Linux=172.18.1.1:1234
+@subscriber4Mac=host.docker.internal:1234
+#Set subscriber depending on your OS
+@subscriber={{subscriber4Linux}}
+#@subscriber={{subscriber4Windows}}
+#@subscriber={{subscriber4Mac}}
+
+
+
 
 ### Check that Orion is running
 GET http://{{orion}}/version
