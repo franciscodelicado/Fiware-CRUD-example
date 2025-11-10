@@ -201,7 +201,11 @@ curl -X POST 'http://localhost:1026/v2/subscriptions' \
 }
 '
 ```
-**NOTA**: es importantísimo el recalcar que dado que Orion está en un contenedor de Docker, y que el servicio HTTP que hemos desplegado para recibir las notificaciones está en el host, debemos usar como IP para la URL del campo `notification.http.url` la IP del host vista desde el contenedor de Docker. Para ello, hay que utilizar la IP del `gateway` de la red Docker que usa por el contenedor de Orion. Esta IP es la primera IP del rango direccionable de la red Docker. La dirección de esta red puede verse en el fichero `docker-compose.yml` que se usa para desplegar el entorno Fiware, en la sección `networks`. En nuestro caso, la red se llama `fiware_default` y tiene el rango `172.18.1.0/16`. Por lo tanto, la IP del `gateway` es `172.18.1.1`.
+**NOTA IMPORTANTE**: es importantísimo el recalcar que dado que Orion está en un contenedor de Docker, y que el servicio HTTP que hemos desplegado para recibir las notificaciones está en el host, debemos usar como IP para la URL del campo `notification.http.url` la IP del host vista desde el contenedor de Docker. Dependiendo del SO que se esté utilizando esta IP es la siguiente:
+
+- En **Windows** y **MacOS**: `host.docker.internal`, este hostname es un alias que Docker crea automáticamente para referirse al host desde los contenedores.
+- En **Linux**: **NO existe** el alias `host.docker.internal`. Por ello, hay que utilizar la IP del `gateway` de la red Docker que usa  el contenedor de Orion. Esta IP es la primera IP del rango direccionable de la red Docker. La dirección de esta red puede verse en el fichero `docker-compose.yml` que se usa para desplegar el entorno Fiware, en la sección `networks`. En nuestro caso, la red se llama `fiware_default` y tiene el rango `172.18.1.0/16`. Por lo tanto, la IP del `gateway` es `172.18.1.1`.
+
 
 ## Visualización de las subscripciones
 Para ver las subscripciones que tenemos dadas de alta en Orion, podemos realizar una petición GET al endpoint `/v2/subscriptions`:
