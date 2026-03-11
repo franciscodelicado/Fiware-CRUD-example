@@ -1,0 +1,607 @@
+@orion=localhost:1026
+
+### Check that Orion is running
+GET http://{{orion}}/version
+Accept: application/json
+
+### List all entities
+GET http://{{orion}}/v2/entities
+Accept: application/json
+
+### Batch create: one Sensor for each Room
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json
+
+{
+  "actionType": "append",
+  "entities": [
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat1Room1",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 15.9,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 28,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat1Room1"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat1Room2",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 16.7,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 34,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat1Room2"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat1Room3",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 19.2,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 41,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat1Room3"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat1Room4",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 17.4,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 53,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat1Room4"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat1Room5",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 18.8,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 26,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat1Room5"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat2Room1",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 15.3,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 60,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat2Room1"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat2Room2",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 19.7,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 45,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat2Room2"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat2Room3",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 16.1,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 22,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat2Room3"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat2Room4",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 18.1,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 57,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat2Room4"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat2Room5",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 17.0,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 37,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat2Room5"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat3Room1",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 15.6,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 49,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat3Room1"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat3Room2",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 19.1,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 24,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat3Room2"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat3Room3",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 16.8,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 52,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat3Room3"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat3Room4",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 18.5,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 33,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat3Room4"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat3Room5",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 17.9,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 39,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat3Room5"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat4Room1",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 16.0,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 58,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat4Room1"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat4Room2",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 19.4,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 31,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat4Room2"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat4Room3",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 15.1,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 27,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat4Room3"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat4Room4",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 18.3,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 55,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat4Room4"
+      }
+    },
+    {
+      "id": "urn:ngsi-ld:Sensor:RoomSensorFlat4Room5",
+      "type": "Sensor",
+      "temperature": {
+        "type": "Number",
+        "value": 17.6,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "CEL"
+          }
+        }
+      },
+      "humidity": {
+        "type": "Number",
+        "value": 43,
+        "metadata": {
+          "unicode": {
+            "type": "Text",
+            "value": "P1"
+          }
+        }
+      },
+      "refRoom": {
+        "type": "Relationship",
+        "value": "urn:ngsi-ld:Room:Flat4Room5"
+      }
+    }
+  ]
+}
+
+### List all entities. Are you surprised by the result?
+GET http://{{orion}}/v2/entities
+Accept: application/json
+
+### List all entities
+GET http://{{orion}}/v2/entities?limit=100
+Accept: application/json
+
+### List entities with filters
+GET http://{{orion}}/v2/entities?options=keyValues&type=Sensor&attrs=temperature,refRoom&q=temperature>19
+Accept: application/json
+
+### Batch query
+POST http://{{orion}}/v2/op/query?options=keyValues
+Content-Type: application/json
+
+{
+  "entities": [
+    {
+      "type": "Sensor",
+      "idPattern": ".*Flat2.*"
+    }
+  ],
+  "expression": {"q" : "temperature<19;temperature>16"},
+  "attrs": ["id", "temperature", "refRoom"]
+}
+
