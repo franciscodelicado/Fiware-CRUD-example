@@ -12,7 +12,13 @@
 #@subscriber={{subscriber4Windows}}
 #@subscriber={{subscriber4Mac}}
 
+### Check that python subcriber is running and listening on the right port
+POST http://localhost:1234/subscription/attr-change
+Content-Type: application/json
 
+{
+  "test": "This is a test message"
+}
 
 
 ### Check that Orion is running
