@@ -564,6 +564,8 @@ curl -s -o /dev/null -X POST \
     ]
 }'
 
+
+
 # printf "⏳ Loading sensors entities "
 # # Loading sensors entities
 # curl -s -o /dev/null -X POST \
