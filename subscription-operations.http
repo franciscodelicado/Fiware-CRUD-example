@@ -1,194 +1,201 @@
+# CRUD Operations for FIWARE NGSI-v2
+
 #General settings
 @orion=localhost:1026
+@webserver4Windows=host.docker.internal:1234
+@webserver4Linux=172.18.1.1:1234
+@webserver4Mac=host.docker.internal:1234
+#Set webserver depending on your OS
+@webserver={{webserver4Linux}}
+#@webserver={{webserver4Windows}}
+#@webserver={{webserver4Mac}}
 
-# Subscriber IP and port. It should be reachable from the Orion Context Broker, so if you are using Docker, use the docker network gateway IP, which is an interface between the your host and the Docker containers.
-# For Windows and Mac use host.docker.internal, for Linux use the gateway IP (usually first IP of docker network, see docker-compose.yml for details)
 
-@subscriber4Windows=host.docker.internal:1234
-@subscriber4Linux=172.18.1.1:1234
-@subscriber4Mac=host.docker.internal:1234
-#Set subscriber depending on your OS
-@subscriber={{subscriber4Linux}}
-#@subscriber={{subscriber4Windows}}
-#@subscriber={{subscriber4Mac}}
-
-### Check that python subcriber is running and listening on the right port
-POST http://localhost:1234/subscription/attr-change
+### Check Python web server is running
+POST http://{{webserver}}/subscription/attr-change
 Content-Type: application/json
 
 {
-  "test": "This is a test message"
-}
+    "message": "Hello world!!"
+}   
 
 
-### Check that Orion is running
-GET http://{{orion}}/version
-Accept: application/json
-
-### List all entities
+### List all entities to verify update
 GET http://{{orion}}/v2/entities?options=keyValues
-Accept: application/json
 
-### Create a subscription to be notified when the stock of any product is below 20
+## SUBSCRIPTIONS QUERIES
+### Query sensors with a battery level above 80%
 POST http://{{orion}}/v2/subscriptions
-Content-Type: application/json  
+Content-Type: application/json
 
 {
-  "description": "Notify me when stock is below 20",
-  "subject": {
-    "entities": [
-      {
-        "idPattern": "urn:ngsi-ld:Inventory:.*",
-        "type": "Inventory"
-      }
-    ],
-    "condition": {
-      "attrs": [
-        "stockCount"
-      ],
-      "expression": {
-        "q": "stockCount<20"
-      }
-    }
-  },
-  "notification": {
-    "http": {
-      "url": "http://{{subscriber}}//subscription/attr-change"
+    "description": "Notify when battery level is above 10%",
+    "subject":{
+        "entities": [
+            {
+                "idPattern": ".*",
+                "type": "Sensor"
+            }
+        ],
+        "condition": {
+            "attrs": ["batteryLevel"],
+            "expression": {"q": "batteryLevel<10"}
+        }
     },
-    "attrs": [
-      "stockCount"
-    ],
-    "metadata": ["dateCreated", "dateModified"]
-  },
-  "throttling": 5
+    "notification": {
+        "http": {
+            "url": "http://{{webserver}}/subscription/attr-change"
+        },
+        "attrs": ["room", "batteryLevel"],
+        "attrsFormat": "keyValues"
+    },
+    "throttling": 0
 }
 
-
-### List all subscriptions
+### Get all subscriptions
 # @name getSubscriptions
 GET http://{{orion}}/v2/subscriptions
-Accept: application/json
 
-### Update stockCount attribute of an inventory entity to trigger the subscription
-POST http://{{orion}}/v2/entities/urn:ngsi-ld:Inventory:001/attrs?options=keyValues
+### Update battery level of sensor s1, s5 bellow 10% to trigger the subscription
+POST http://{{orion}}/v2/op/update
 Content-Type: application/json
 
 {
-    "stockCount": 15
+    "actionType": "update",
+    "entities": [
+        {
+            "id": "urn:ngsi-ld:Sensor:s1",
+            "batteryLevel": { "value": 3.1}
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s5",
+            "batteryLevel": { "value": 5.0}
+        }  
+    ]
 }
-    
-### GET Inventory entity to see the updated attribute
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Inventory:001?options=keyValues
-Accept: application/json
 
-### New subscription: Bread price below 1.0 EUR
-POST http://{{orion}}/v2/subscriptions
-Content-Type: application/json  
+### Update subscription to disable throttling
+@SubscriptionId = {{getSubscriptions.response.body.$[0].id}}
+PATCH http://{{orion}}/v2/subscriptions/{{SubscriptionId}}
+Content-Type: application/json
 
 {
-  "description": "Notify me when bread price is below 1.0 EUR",
-  "subject": {
+    "state": "inactive"
+}
+
+### Update battery level of sensor s2, s3 and s4 bellow 10% to trigger the subscription
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json
+
+{
+    "actionType": "update",
     "entities": [
-      {
-        "idPattern": "urn:ngsi-ld:Product:002",
-        "type": "Product",
-        "category": "Bakery",
-        "name" : "Bread"
-      }
-    ],
-    "condition": {
-      "attrs": [
-        "price"
-      ]
-    }
-  },
-  "notification": {
-    "http": {
-      "url": "http://{{subscriber}}/subscription/attr-change"
+        {
+            "id": "urn:ngsi-ld:Sensor:s2",
+            "batteryLevel": { "value": 4.0}
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s3",
+            "batteryLevel": { "value": 2.0}
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s4",
+            "batteryLevel": { "value": 1.0}
+        }  
+    ]
+}
+
+### Notificate with humidity > 70% and temperature > 26ºC
+POST http://{{orion}}/v2/subscriptions/
+Content-Type: application/json
+
+{
+    "description": "Notify when humidity is above 70% and temperature above 26ºC",
+    "subject":{
+        "entities": [
+            {
+                "idPattern": ".*",
+                "type": "Sensor"
+            }
+        ],
+        "condition": {
+            "attrs": ["humidity"],
+            "expression": {"q": "humidity>70.0;temperature>26"} 
+        }
     },
-    "attrs": [
-      "price"
-    ],
-    "metadata": ["dateCreated", "dateModified"]
-  },
-  "throttling": 5
-} 
-
-# UPDATE BREAD PRICE TO TRIGGER THE SUBSCRIPTION
-### First, check the current price of Bread
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:002?options=keyValues
-Accept: application/json
-
-### Update Bread price to trigger the subscription
-PATCH http://{{orion}}/v2/entities/urn:ngsi-ld:Product:002/attrs?options=keyValues
-Content-Type: application/json
-
-{
-    "price": 1
-}
-
-### GET Bread entity to see the updated attribute
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:002?options=keyValues
-Accept: application/json
-
-
-
-
-# UPDATE APPLE PRICE, BUT IT SHOULD NOT TRIGGER THE SUBSCRIPTION
-### First, check the current price of Apple
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:001?options=keyValues
-Accept: application/json
-
-### Update Apple price, but it should NOT trigger the subscription
-POST http://{{orion}}/v2/entities/urn:ngsi-ld:Product:001/attrs?options=keyValues
-Content-Type: application/json
-
-{
-    "price": 1.0
-}
-
-### Get Apple entity to see the updated attribute
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Product:001?options=keyValues
-Accept: application/json
-
-# UPDATE  SUBSCRIPTION about BREAD PRICE TO ADD A CONDITION
-@BreadSubscriptionId = {{getSubscriptions.response.body.$[1].id}}
-### Sent notification only if price is below 1.0 EUR
-PATCH http://{{orion}}/v2/subscriptions/{{BreadSubscriptionId}}
-Content-Type: application/json
-
-{
-  "description": "Notify me when bread price is below 1.0 EUR",
-  "subject": {
-    "entities": [
-      {
-        "idPattern": "urn:ngsi-ld:Product:002",
-        "type": "Product",
-        "category": "Bakery",
-        "name" : "Bread"
-      }
-    ],
-    "condition": {
-      "attrs": [
-        "price"
-      ],
-      "expression": {
-        "q": "price<1.0"
-      }
+    "notification": {
+        "http": {
+            "url": "http://{{webserver}}/subscription/attr-change"
+        },
+        "attrs": ["room", "temperature", "humidity"],
+        "attrsFormat": "keyValues"
     }
-  }
 }
 
-# DELETE SUBSCRIPTION
-### First, list all subscriptions to get the subscriptionId of first subscription
-### List all subscriptions and save the id of the first one in 1stSubscriptionId variable
 
+### Update temperature and humidity of some sensors to trigger the subscription
+POST http://{{orion}}/v2/op/update
+Content-Type: application/json
+
+{
+    "actionType": "update",
+    "entities": [
+        {
+            "id": "urn:ngsi-ld:Sensor:s5",
+            "temperature": { "value": 19.0}
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s4",
+            "humidity": { "value": 92.0}
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s6",
+            "temperature": { "value": 31.5},
+            "humidity": {"value": 61.0}
+        },
+        {
+            "id" : "urn:ngsi-ld:Sensor:s1",
+            "temperature": { "value": 28.0 },
+            "humidity": {"value": 71.0}
+        }
+    ]
+}
+
+### Get all subscriptions
+# @name getSubscriptions2
 GET http://{{orion}}/v2/subscriptions
+
+
+
+### Delete Subscriptions
+@SubscriptionId1 = {{getSubscriptions2.response.body.$[0].id}}
+@SubscriptionId2 = {{getSubscriptions2.response.body.$[1].id}}
+DELETE http://{{orion}}/v2/subscriptions/{{SubscriptionId1}}
 Accept: application/json
 
-### DELETE the subscription
-@1stSubscriptionId = {{getSubscriptions.response.body.$[0].id}}
-DELETE http://{{orion}}/v2/subscriptions/{{1stSubscriptionId}}
+###
+DELETE http://{{orion}}/v2/subscriptions/{{SubscriptionId2}}
 Accept: application/json
+
+
+
+### Query all sensors
+POST http://{{orion}}/v2/op/query?options=keyValues
+Content-Type: application/json
+
+{
+    "entities": [
+        {
+            "idPattern": ".*",
+            "type": "Sensor"
+        }
+    ],
+    "attrs": [
+        "room",
+        "temperature",
+        "humidity",
+        "batteryLevel"
+    ]
+}
 
 

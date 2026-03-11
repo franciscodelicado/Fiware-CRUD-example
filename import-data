@@ -1,296 +1,230 @@
 #!/bin/bash
 #
-#  curl commands to reload the data from the previous tutorial
-#
-#
+# Script to import data into the FIWARE Orion Context Broker
+
 
 set -e
 
-printf "⏳ Loading context data..."
+echo -e "\n🚀 Importing data into \033[1;34mOrion Context Broker\033[0m\n"
 
-# Loading buildings entities
+# Loading Rooms ans Sensors entities
 curl -s -o /dev/null -X POST \
   'http://orion:1026/v2/op/update' \
   -H 'Content-Type: application/json' \
-  -g -d '{
+  -g -d'{
     "actionType": "append",
     "entities": [
         {
-            "id": "urn:ngsi-ld:Store:001",
-            "type": "Store",
-            "address":{
-                "type": "PostalAddress",
-                "value": {
-                    "streetAddress": "C/ Octavio Cuartero, 4",
-                    "addressLocality": "Albacete",
-                    "postalCode": "02001",
-                    "addressCountry": "Spain"
+            "id": "urn:ngsi-ld:Room:livingroom",
+            "type": "Room",
+            "name": { "type": "Text", "value": "Living Room" },
+            "area": { "type": "Number", "value": 35.5,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "MTK" }
                 }
             },
-            "location": {
-                "type": "geo:json",
-                "value": {
-                    "type": "Point",
-                    "coordinates": [ -1.8570339054401495, 38.990913668029066]
-                }   
-            }
+            "floor": { "type": "Number", "value": 1 }
         },
         {
-            "id": "urn:ngsi-ld:Store:002",
-            "type": "Store",
-            "address":{
-                "type": "PostalAddress",
-                "value": {
-                    "streetAddress": "C/ Mayor, 10",
-                    "addressLocality": "Albacete",
-                    "postalCode": "02001",
-                    "addressCountry": "Spain"
+            "id": "urn:ngsi-ld:Room:kitchen",
+            "type": "Room",
+            "name": { "type": "Text", "value": "Kitchen" },
+            "area": { "type": "Number", "value": 15.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "MTK" }
                 }
             },
-            "location": {
-                "type": "geo:json",
-                "value": {
-                    "type": "Point",
-                    "coordinates": [ -1.8568234873836609, 38.994465042377854]
-                }   
-            }
+            "floor": { "type": "Number", "value": 1 }
         },
         {
-            "id": "urn:ngsi-ld:Store:003",
-            "type": "Store",
-            "address":{
-                "type": "PostalAddress",
-                "value": {
-                    "streetAddress": "C/ San Juan, 6",
-                    "addressLocality": "Albacete",
-                    "postalCode": "02001",
-                    "addressCountry": "Spain"
+            "id": "urn:ngsi-ld:Room:bedroom1",
+            "type": "Room",
+            "name": { "type": "Text", "value": "Bedroom 1" },
+            "area": { "type": "Number", "value": 20.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "MTK" }
                 }
             },
-            "location": {
-                "type": "geo:json",
-                "value": {
-                    "type": "Point",
-                    "coordinates": [ -1.8519450432016082,38.98310104892331]
-                }   
-            }
-        }
-    ]
-}'
+            "floor": { "type": "Number", "value": 2 }
 
-# Loading Products entities
+        },
+        {
+            "id": "urn:ngsi-ld:Room:bedroom2",
+            "type": "Room",
+            "name": { "type": "Text", "value": "Bedroom 2" },
+            "area": { "type": "Number", "value": 18.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "MTK"}
+                }
+            },
+            "floor": { "type": "Number", "value": 2 }
+        },
+        {
+            "id": "urn:ngsi-ld:Room:bathroom",
+            "type": "Room",
+            "name": { "type": "Text", "value": "Bathroom" },
+            "area": { "type": "Number", "value": 8.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "MTK"}
+                }
+            },
+            "floor": { "type": "Number", "value": 2 }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s1",
+            "type": "Sensor",
+            "temperature": { "type": "Number", "value": 22.5,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "CEL" }
+                }
+            },
+            "humidity": { "type": "Number", "value": 45.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            },
+            "room": { "type": "Relationship", "value": "urn:ngsi-ld:Room:livingroom" }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s2",
+            "type": "Sensor",
+            "temperature": { "type": "Number", "value": 24.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "CEL" }
+                }
+            },
+            "humidity": { "type": "Number", "value": 50.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            },
+            "room": { "type": "Relationship", "value": "urn:ngsi-ld:Room:kitchen" }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s3",
+            "type": "Sensor",
+            "temperature": { "type": "Number", "value": 21.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "CEL" }
+                }
+            },
+            "humidity": { "type": "Number", "value": 40.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            },
+            "room": { "type": "Relationship", "value": "urn:ngsi-ld:Room:livingroom" }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s4",
+            "type": "Sensor",
+            "temperature": { "type": "Number", "value": 20.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "CEL" }
+                }
+            },
+            "humidity": { "type": "Number", "value": 35.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            },
+            "room": { "type": "Relationship", "value": "urn:ngsi-ld:Room:bedroom1" }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s5",
+            "type": "Sensor",
+            "temperature": { "type": "Number", "value": 19.5,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "CEL" }
+                }
+            },
+            "humidity": { "type": "Number", "value": 38.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            },
+            "room": { "type": "Relationship", "value": "urn:ngsi-ld:Room:bedroom2" }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s6",
+            "type": "Sensor",
+            "temperature": { "type": "Number", "value": 23.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "CEL" }
+                }
+            },
+            "humidity": { "type": "Number", "value": 55.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            },
+            "room": { "type": "Relationship", "value": "urn:ngsi-ld:Room:bathroom" }
+        }   
+    ]
+}' 
+
+# Loading batteryLevel for Sensors
 curl -s -o /dev/null -X POST \
   'http://orion:1026/v2/op/update' \
   -H 'Content-Type: application/json' \
-  -g -d '{
+  -g -d'{
     "actionType": "append",
     "entities": [
         {
-            "id": "urn:ngsi-ld:Product:001",
-            "type": "Product",
-            "name": {
-                "type": "Text",
-                "value": "Apple"
-            },
-            "category": {
-                "type": "Text",
-                "value": "Fruit"
-            },
-            "price": {
-                "type": "Number",
-                "value": 1.5,
-                "metadata": { "currency": { "type": "Text", "value": "EUR" }}
+            "id": "urn:ngsi-ld:Sensor:s1",
+            "type": "Sensor",
+            "batteryLevel": { "type": "Number", "value": 95.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
             }
         },
         {
-            "id": "urn:ngsi-ld:Product:002",
-            "type": "Product",
-            "name": {
-                "type": "Text",
-                "value": "Bread"
-            },
-            "category": {
-                "type": "Text",
-                "value": "Bakery"
-            },
-            "price": {
-                "type": "Number",
-                "value": 1.2,
-                "metadata": { "currency": { "type": "Text", "value": "EUR" } }
+            "id": "urn:ngsi-ld:Sensor:s2",
+            "type": "Sensor",
+            "batteryLevel": { "type": "Number", "value": 90.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
             }
         },
         {
-            "id": "urn:ngsi-ld:Product:003",
-            "type": "Product",
-            "name": {
-                "type": "Text",
-                "value": "Milk"
-            },
-            "category": {
-                "type": "Text",
-                "value": "Dairy"
-            },
-            "price": {
-                "type": "Number",
-                "value": 0.9,
-                "metadata": { "currency": { "type": "Text", "value": "EUR" }}
+            "id": "urn:ngsi-ld:Sensor:s3",
+            "type": "Sensor",
+            "batteryLevel": { "type": "Number", "value": 85.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
             }
-        }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s4",
+            "type": "Sensor",
+            "batteryLevel": { "type": "Number", "value": 80.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s5",
+            "type": "Sensor",
+            "batteryLevel": { "type": "Number", "value": 75.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            }
+        },
+        {
+            "id": "urn:ngsi-ld:Sensor:s6",
+            "type": "Sensor",
+            "batteryLevel": { "type": "Number", "value": 70.0,
+                "metadata": {
+                    "unitCode": { "type": "Text", "value": "P1" }
+                }
+            }
+        }  
     ]
 }'
 
-# Loading Inventory entities
-curl -s -o /dev/null -X POST \
-  'http://orion:1026/v2/op/update' \
-  -H 'Content-Type: application/json' \
-  -g -d '{
-    "actionType": "append",
-    "entities": [
-        {
-            "id": "urn:ngsi-ld:Inventory:001",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:001"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:001"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 50
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:002",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:001"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:002"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 30
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:003",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:001"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:003"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 20
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:004",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:002"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:001"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 50
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:005",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:002"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:002"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 30
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:006",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:002"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:003"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 20
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:007",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:003"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:001"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 50
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:008",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:003"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:002"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 30
-                }
-        },
-        {
-            "id": "urn:ngsi-ld:Inventory:009",
-            "type": "Inventory",
-            "refStore": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Store:003"
-            },
-            "refProduct": {
-                "type": "Relationship",
-                "value": "urn:ngsi-ld:Product:003"
-            },
-            "stockCount": {
-                "type": "Number",
-                "value": 20
-                }
-        }
-    ]
-}'
-
-printf " ✅ Done\n"
+echo -e "\n✅ Data import completed\n"
