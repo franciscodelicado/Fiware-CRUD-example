@@ -6,13 +6,13 @@
 @webserver4Linux=172.18.1.1:1234
 @webserver4Mac=host.docker.internal:1234
 #Set webserver depending on your OS
-@webserver={{webserver4Linux}}
-#@webserver={{webserver4Windows}}
+#@webserver={{webserver4Linux}}
+@webserver={{webserver4Windows}}
 #@webserver={{webserver4Mac}}
 
 
 ### Check Python web server is running
-POST http://{{webserver}}/subscription/attr-change
+POST http://localhost:1234/subscription/attr-change
 Content-Type: application/json
 
 {
@@ -53,7 +53,6 @@ Content-Type: application/json
 }
 
 ### Get all subscriptions
-# @name getSubscriptions
 GET http://{{orion}}/v2/subscriptions
 
 ### Update battery level of sensor s1, s5 bellow 10% to trigger the subscription
@@ -69,19 +68,11 @@ Content-Type: application/json
         },
         {
             "id": "urn:ngsi-ld:Sensor:s5",
-            "batteryLevel": { "value": 5.0}
+            "batteryLevel": { "value": 6.0}
         }  
     ]
 }
 
-### Update subscription to disable throttling
-@SubscriptionId = {{getSubscriptions.response.body.$[0].id}}
-PATCH http://{{orion}}/v2/subscriptions/{{SubscriptionId}}
-Content-Type: application/json
-
-{
-    "state": "inactive"
-}
 
 ### Update battery level of sensor s2, s3 and s4 bellow 10% to trigger the subscription
 POST http://{{orion}}/v2/op/update
@@ -92,7 +83,7 @@ Content-Type: application/json
     "entities": [
         {
             "id": "urn:ngsi-ld:Sensor:s2",
-            "batteryLevel": { "value": 4.0}
+            "batteryLevel": { "value": 2.0}
         },
         {
             "id": "urn:ngsi-ld:Sensor:s3",
@@ -162,14 +153,14 @@ Content-Type: application/json
 }
 
 ### Get all subscriptions
-# @name getSubscriptions2
+# @name getSubscriptions
 GET http://{{orion}}/v2/subscriptions
 
 
 
 ### Delete Subscriptions
-@SubscriptionId1 = {{getSubscriptions2.response.body.$[0].id}}
-@SubscriptionId2 = {{getSubscriptions2.response.body.$[1].id}}
+@SubscriptionId1 = {{getSubscriptions.response.body.$[0].id}}
+@SubscriptionId2 = {{getSubscriptions.response.body.$[1].id}}
 DELETE http://{{orion}}/v2/subscriptions/{{SubscriptionId1}}
 Accept: application/json
 
