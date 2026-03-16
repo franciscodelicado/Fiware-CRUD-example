@@ -7,31 +7,89 @@
 GET http://{{orion}}/version
 
 # ENTITY MANAGEMENT
-### Add entity Building:001
+### Add entity urn:ngsi-ld:Room:livingroom
+POST http://{{orion}}/v2/entities
+Content-Type: application/json
+
+ {
+    "id": "urn:ngsi-ld:Room:livingroom",
+    "type": "Room",
+    "name": {
+        "type": "Text",
+        "value": "Living Room"  
+    },
+    "area": {
+        "type": "Number",
+        "value": 20,
+        "metadata": {
+            "unitCode": {
+                "type": "Text",
+                "value": "MTK"
+            }
+        }   
+    },
+    "floor":{  
+        "type": "Number",
+        "value": 1
+    }
+}
+
+
+### Add entity urn:ngsi-ld:Room:kitchen
+POST http://{{orion}}/v2/entities
+Content-type: application/json
+
+{
+    "id": "urn:ngsi-ld:Room:kitchen",
+    "type": "Room",
+    "name": {
+        "type": "Text",
+        "value": "Kitchen"  
+    },
+    "area": {
+        "type": "Number",
+        "value": 14,
+        "metadata": {
+            "unitCode": {
+                "type": "Text",
+                "value": "MTK"
+            }
+        }   
+    },
+    "floor":{  
+        "type": "Number",
+        "value": 1
+    }
+}
+
+
+
+### Add entity urn:ngsi-ld:Room:bedroom1
 POST http://{{orion}}/v2/entities
 Content-Type: application/json
 
 {
-    "id": "urn:ngsi-ld:Building:001",
-    "type": "Building",
-    "address":{
-        "type": "PostalAddress",
-        "value": {
-            "streetAddress": "C/ Octavio Cuartero, 4",
-            "addressLocality": "Albacete",
-            "postalCode": "02001",
-            "addressCountry": "Spain"
-        }
+    "id": "urn:ngsi-ld:Room:bedroom1",
+    "type": "Room",
+    "name": {
+        "type": "Text",
+        "value": "Bedroom"  
     },
-    "location": {
-        "type": "geo:json",
-        "value": {
-            "type": "Point",
-            "coordinates": [ -1.8570339054401495, 38.990913668029066]
+    "area": {
+        "type": "Number",
+        "value": 12,
+        "metadata": {
+            "unitCode": {
+                "type": "Text",
+                "value": "MTK"
+            }
         }   
+    },
+    "floor":{  
+        "type": "Number",
+        "value": 1
     }
 }
-
 
 ### List all entities normalized
 GET http://{{orion}}/v2/entities
@@ -46,121 +104,242 @@ GET http://{{orion}}/v2/entities?options=values
 Accept: application/json
 
 ### List all entities in keyValues mode with attribute location
-GET http://{{orion}}/v2/entities?options=keyValues&attrs=location
+GET http://{{orion}}/v2/entities?options=keyValues&attrs=floor
 Accept: application/json
 
-### Create entity by ID
+### Create entity for sensor 1
 POST http://{{orion}}/v2/entities
 Content-Type: application/json
 
 {
-  "id": "urn:ngsi-ld:Building:002",
-  "type": "Building",
-  "address":{
-      "type": "PostalAddress",
-      "value": {
-          "streetAddress": "C/ Mayor, 10",
-          "addressLocality": "Madrid",
-          "postalCode": "28013",
-          "addressCountry": "Spain"
-      }
-  },
-  "location": {
-      "type": "geo:json",
-      "value": {
-          "type": "Point",
-          "coordinates": [
-            -3.705960302523467, 
-            40.41669683428096
-            ]
+  "id": "urn:ngsi-ld:Sensor:001",
+  "type": "Sensor",
+  "temperature" : {
+      "type": "Number",
+      "value": 20.5,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "CEL"
+          }
       }   
-  }
+  },
+  "humidity" : {
+      "type": "Number",
+      "value": 55,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "P1"
+          }
+      }   
+  },
+  "batteryLevel" : {
+      "type": "Number",
+      "value": 85,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "P1"
+          }
+      }   
+  },
+  "refRoom":{
+      "type": "Relationship",
+      "value": {
+        "type": "Text", 
+        "value": "urn:ngsi-ld:Room:livingroom"}
+      }
 }
 
+### Create entity for sensor 2
+POST http://{{orion}}/v2/entities
+Content-Type: application/json
+
+{
+  "id": "urn:ngsi-ld:Sensor:002",
+  "type": "Sensor",
+  "temperature" : {
+      "type": "Number",
+      "value": 23.5,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "CEL"
+          }
+      }   
+  },
+  "humidity" : {
+      "type": "Number",
+      "value": 60,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "P1"
+          }
+      }   
+  },
+  "batteryLevel" : {
+      "type": "Number",
+      "value": 80,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "P1"
+          }
+      }   
+  },
+  "refRoom":{
+      "type": "Relationship",
+      "value": {
+        "type": "Text", 
+        "value": "urn:ngsi-ld:Room:kitchen"}
+      }
+}
+
+### Create entity for sensor 3
+POST http://{{orion}}/v2/entities
+Content-Type: application/json
+
+{
+  "id": "urn:ngsi-ld:Sensor:003",
+  "type": "Sensor",
+  "temperature" : {
+      "type": "Number",
+      "value": 26.5,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "CEL"
+          }
+      }   
+  },
+  "humidity" : {
+      "type": "Number",
+      "value": 95,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "P1"
+          }
+      }   
+  },
+  "batteryLevel" : {
+      "type": "Number",
+      "value": 75,
+      "metadata": {
+          "unitCode": {
+              "type": "Text",
+              "value": "P1"
+          }
+      }   
+  },
+  "refRoom":{
+      "type": "Relationship",
+      "value": {
+        "type": "Text", 
+        "value": "urn:ngsi-ld:Room:livingroom"}
+      }
+}
+
+
+### List all entities in keyValues mode
+GET http://{{orion}}/v2/entities?options=keyValues
+Accept: application/json
+
+### List all entities in keyValues mode with type = Sensor 
+GET http://{{orion}}/v2/entities?options=keyValues&type=Sensor
+Accept: application/json
+
+### List humidity attribute of all Sensor entities in keyValues mode
+GET http://{{orion}}/v2/entities?options=keyValues&type=Sensor&attrs=humidity
+Accept: application/json
+
 ### Delete entity
-DELETE http://{{orion}}/v2/entities/urn:ngsi-ld:Building:001
+DELETE http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:001
 
 
 # ATTRIBUTE MANAGEMENT
 ## READ
 ### Get all attributes of an entity
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs?options=keyValues
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs?options=keyValues
 Accept: application/json
 
 ### Get specific attribute of an entity
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/address
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs/temperature
 Accept: application/json    
 
 ### Get value of specific attribute of an entity
-GET http://{{orion}}/v2/entities/urn:ngsi-ld:Building:001/attrs/address/value
-Accept: application/json
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs/humidity/value
+Accept: text/plain
 
 # Queries with filter
-### List all entities of type Building
-GET http://{{orion}}/v2/entities?type=Building
+### List all entities of type Sensor
+GET http://{{orion}}/v2/entities?type=Sensor
 
-### List all entities of type Building with postalCode '02001'
-GET http://{{orion}}/v2/entities?type=Building&q=address.postalCode=='02001'&options=keyValues
+### List all entities of type Sensor with temperature less than 21
+GET http://{{orion}}/v2/entities?type=Sensor&q=temperature<21&options=keyValues
 Accept: application/json
 
 
-### List all entities of type Building within 2000 meters of given coordinates
-GET http://{{orion}}/v2/entities?type=Building&geoproperty=location&georel=near;maxDistance:2000&geometry=point&coords=40.416775,-3.703790&options=keyValues
-Accept: application/json
 
-
-## UPDATE Attributes
+ UPDATE Attributes
 ### Add or update attributes of an entity
-POST http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
+POST http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs
 Content-Type: application/json
 
 {
-  "numberOfFloors": {
+  "batteryLevel": {
       "type": "Integer",
-      "value": 5
+      "value": 50
   }
 }
+
+### Get value of Sensor entities
+GET http://{{orion}}/v2/entities?type=Sensor&options=keyValues
+Accept: application/json
+
 
 ### UPDATE attributes of an entity using PATCH
-PATCH http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
+PATCH http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:003/attrs
 Content-Type: application/json
 
 {
-  "numberOfFloors": {
-      "value": 6
+  "batteryLevel": {
+      "value": 75
   },
-  "location": {
-      "value": {
-          "type": "Point",
-          "coordinates": [
-            -3.706, 
-            40.417
-            ]
+  "temperature": {
+      "value": 22.5
       }   
-  }
 }
+
+
+### Get value of Sensor entities
+GET http://{{orion}}/v2/entities?type=Sensor&options=keyValues
+Accept: application/json
+
 
 
 ### REPLACE all attributes of an entity using PUT
-PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs
+PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs
 Content-Type: application/json 
 
 {  "name": {
       "type": "Text",
-      "value": "Edificio FRANMAN"
+      "value": "SENSOR 002"
   },
-  "numberFloors": {
+  "humidity": {
       "type": "Integer",
       "value": 7
   },
-  "area": {
+  "luminosity": {
       "type": "Number",
       "value": 635.5
   }
 }
 
 ### REPLACE an specific attribute of an entity using PUT
-PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/area
+PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs/luminosity
 Content-Type: application/json 
 
 {  
@@ -174,19 +353,24 @@ Content-Type: application/json
     }
 }
 
+
+### Get value of Sensor entities
+GET http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002
+Accept: application/json
+
 ### UPDATE value of an specific attribute of an entity using PUT
-PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/name/value
+PUT http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs/luminosity/value
 Content-Type: text/plain
 
-"Edificio FRANMAN 2.0"
+1025.0
 
 ### DELETE specific attribute of an entity
-DELETE http://{{orion}}/v2/entities/urn:ngsi-ld:Building:002/attrs/name
+DELETE http://{{orion}}/v2/entities/urn:ngsi-ld:Sensor:002/attrs/luminosity
 
 
-### List entities of type Temperature
-GET http://{{orion}}/v2/entities?options=keyValues&q=refFlat==urn:ngsi-ld:Flat:001
-Accept: application/json    
+### 
+
+
 
 
 
